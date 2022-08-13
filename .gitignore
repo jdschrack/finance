@@ -1,0 +1,13 @@
+**/.bloop
+**/.metals
+**/.bsp
+**/.idea
+**/.vscode
+**/.sw?
+**/.DS_Store
+
+target/
+**/metals.sbt
+.history
+
+tags
