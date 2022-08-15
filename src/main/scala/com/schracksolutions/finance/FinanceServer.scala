@@ -15,20 +15,21 @@ object FinanceServer {
 
   def stream[F[_]: Async]: Stream[F, Nothing] = {
     for {
-      client         <- Stream.resource(EmberClientBuilder.default[F].build)
-      helloWorldAlg   = HelloWorld.impl[F]
-      jokeAlg         = Jokes.impl[F](client)
+      client <- Stream.resource(EmberClientBuilder.default[F].build)
+//      helloWorldAlg   = HelloWorld.impl[F]
+//      jokeAlg         = Jokes.impl[F](client)
       transactionsAlg = Transactions.impl[F]
 
       // Combine Service Routes into an HttpApp.
       // Can also be done via a Router if you
       // want to extract segments not checked
       // in the underlying routes.
-      httpApp = (
-                  FinanceRoutes.transactionRoutes[F](transactionsAlg) <+>
+      httpApp =
+        FinanceRoutes
+          .transactionRoutes[F](transactionsAlg) /*<+>
                     FinanceRoutes.helloWorldRoutes[F](helloWorldAlg) <+>
-                    FinanceRoutes.jokeRoutes[F](jokeAlg)
-                ).orNotFound
+                    FinanceRoutes.jokeRoutes[F](jokeAlg)*/
+          .orNotFound
 
       // With Middlewares in place
       finalHttpApp = Logger.httpApp(true, true)(httpApp)
